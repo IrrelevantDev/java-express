@@ -33,7 +33,7 @@ public class FilterLayerHandler {
 
         // First fire all middleware's, then the normal request filter
         for (FilterLayer chain : layers) {
-            chain.filter(request, response);
+            chain.filter(request, response, express);
 
             if (response.isClosed()) {
                 return;

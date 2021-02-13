@@ -10,6 +10,8 @@ import express.filter.FilterWorker;
 import express.http.HttpRequestHandler;
 import express.http.request.Request;
 import express.http.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +27,7 @@ import java.util.concurrent.Executors;
  * Core class of java-express
  */
 public class Express implements Router {
+    static final Logger log = LoggerFactory.getLogger(Express.class);
 
     private final ConcurrentHashMap<String, HttpRequestHandler> parameterListener;
     private final ConcurrentHashMap<Object, Object> locals;
@@ -33,6 +36,7 @@ public class Express implements Router {
     private final FilterLayerHandler handler;
 
     private Executor executor;
+    private HandlerPool pool;
     private String hostname;
     private HttpServer httpServer;
     private HttpsConfigurator httpsConfigurator;
@@ -46,6 +50,7 @@ public class Express implements Router {
         handler = new FilterLayerHandler(2);
 
         executor = Executors.newCachedThreadPool();
+        pool = new HandlerPool(20);
     }
 
     /**
@@ -397,5 +402,12 @@ public class Express implements Router {
             // Stop worker threads
             worker.forEach(FilterWorker::stop);
         }
+    }
+
+    /**
+     * @return HandlerPool
+     */
+    public HandlerPool getPool() {
+        return pool;
     }
 }

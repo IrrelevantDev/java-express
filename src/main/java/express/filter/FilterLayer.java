@@ -1,5 +1,6 @@
 package express.filter;
 
+import express.Express;
 import express.http.HttpRequestHandler;
 import express.http.request.Request;
 import express.http.response.Response;
@@ -34,11 +35,16 @@ public class FilterLayer<T extends HttpRequestHandler> {
         return filter;
     }
 
-    void filter(Request req, Response res) {
+    void filter(Request req, Response res, Express express) {
         ListIterator<T> iter = this.filter.listIterator();
 
         while (!res.isClosed() && iter.hasNext()) {
-            iter.next().handle(req, res);
+            express.getPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    iter.next().handle(req, res);
+                }
+            });
         }
     }
 }
