@@ -33,14 +33,14 @@ public class Express implements Router {
     private final ConcurrentHashMap<Object, Object> locals;
 
     private final ArrayList<FilterWorker> worker;
-    private final FilterLayerHandler handler;
+    final FilterLayerHandler handler;
 
     private Executor executor;
     private HandlerPool pool;
     private String hostname;
     private HttpServer httpServer;
     private HttpsConfigurator httpsConfigurator;
-
+    private int poolSize = 20;
     {
         // Initialize
         parameterListener = new ConcurrentHashMap<>();
@@ -50,7 +50,7 @@ public class Express implements Router {
         handler = new FilterLayerHandler(2);
 
         executor = Executors.newCachedThreadPool();
-        pool = new HandlerPool(20);
+        pool = new HandlerPool(poolSize);
     }
 
     /**
@@ -62,6 +62,17 @@ public class Express implements Router {
     public Express(String hostname) {
         this.hostname = hostname;
     }
+    /**
+     * Create an express instance and bind the server to an hostname.
+     * Default is "Localhost"
+     *
+     * @param hostname The host name
+     * @param poolSize Size of async pool
+     */
+    public Express(String hostname, int poolSize) {
+        this.hostname = hostname;
+        this.poolSize = poolSize;
+    }
 
     /**
      * Default, will bind the server to "localhost"
@@ -70,6 +81,17 @@ public class Express implements Router {
      */
     public Express(HttpsConfigurator httpsConfigurator) {
         this.httpsConfigurator = httpsConfigurator;
+    }
+
+    /**
+     * Default, will bind the server to "localhost"
+     *
+     * @param httpsConfigurator The HttpsConfigurator for https
+     * @param poolSize Size of async pool
+     */
+    public Express(HttpsConfigurator httpsConfigurator, int poolSize) {
+        this.httpsConfigurator = httpsConfigurator;
+        this.poolSize = poolSize;
     }
 
     /**
@@ -83,6 +105,21 @@ public class Express implements Router {
         this.hostname = hostname;
         this.httpsConfigurator = httpsConfigurator;
     }
+
+    /**
+     * Create an express instance and bind the server to an hostname.
+     * Default is "Localhost"
+     *
+     * @param hostname          The host name
+     * @param httpsConfigurator The HttpsConfigurator for https
+     * @param poolSize Size of async pool
+     */
+    public Express(String hostname, HttpsConfigurator httpsConfigurator, int poolSize) {
+        this.hostname = hostname;
+        this.httpsConfigurator = httpsConfigurator;
+        this.poolSize = poolSize;
+    }
+
 
     /**
      * Default, will bind the server to "localhost"
@@ -374,7 +411,7 @@ public class Express implements Router {
                 httpServer.setExecutor(executor);
 
                 // Create handler for all contexts
-                httpServer.createContext("/", exchange -> handler.handle(exchange, this));
+                httpServer.createContext("/", exchange -> pool.execute(Express.this,exchange));
 
                 // Start server
                 httpServer.start();

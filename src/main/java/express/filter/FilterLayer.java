@@ -4,6 +4,7 @@ import express.Express;
 import express.http.HttpRequestHandler;
 import express.http.request.Request;
 import express.http.response.Response;
+import express.utils.Status;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,12 +40,7 @@ public class FilterLayer<T extends HttpRequestHandler> {
         ListIterator<T> iter = this.filter.listIterator();
 
         while (!res.isClosed() && iter.hasNext()) {
-            express.getPool().execute(new Runnable() {
-                @Override
-                public void run() {
-                    iter.next().handle(req, res);
-                }
-            });
+            iter.next().handle(req, res);
         }
     }
 }

@@ -6,6 +6,7 @@ import express.ExpressException;
 import express.http.HttpRequestHandler;
 import express.http.request.Request;
 import express.http.response.Response;
+import express.utils.Status;
 
 import java.util.function.Consumer;
 
@@ -28,6 +29,7 @@ public class FilterLayerHandler {
     }
 
     public void handle(HttpExchange httpExchange, Express express) {
+        long start = System.currentTimeMillis();
         Request request = new Request(httpExchange, express);
         Response response = new Response(httpExchange);
 
@@ -36,9 +38,17 @@ public class FilterLayerHandler {
             chain.filter(request, response, express);
 
             if (response.isClosed()) {
-                return;
+                break;
             }
         }
+
+        if (response.isClosed()){
+            Status status = Status.valueOf(response.getStatus());
+            if (status != null){
+                System.out.println("[" + Thread.currentThread().getName() + "] Handled request in " + (System.currentTimeMillis() - start) + "ms with " + status.getCode() + " " + status.getDescription() + " (" + request.getURI().toString() + ")");
+            }
+        }
+
     }
 
     /**
