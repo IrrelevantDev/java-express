@@ -3,11 +3,14 @@ package express;
 import com.sun.net.httpserver.HttpExchange;
 import express.filter.FilterLayerHandler;
 import express.http.response.Response;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@Log4j2
 public class HandlerPool extends ThreadPoolExecutor {
     public HandlerPool(int size) {
         super(Math.min(size, 500), 500, 60, TimeUnit.MILLISECONDS, new SynchronousQueue<>());
@@ -24,7 +27,7 @@ public class HandlerPool extends ThreadPoolExecutor {
     @Override
     protected void afterExecute(Runnable runnable, Throwable throwable) {
         if (throwable != null) {
-            Express.log.error("Exception in asynchronous task", throwable);
+            log.error("Exception in asynchronous task", throwable);
         }
     }
 

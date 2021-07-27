@@ -5,8 +5,7 @@ import express.http.request.Request;
 import express.http.response.Response;
 import express.utils.Status;
 import express.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +21,8 @@ import java.util.Optional;
  * @author Simon Reinisch
  * An middleware to provide access to static server-files.
  */
+@Log4j2
 public final class FileProvider implements HttpRequestHandler {
-
-    private static final Logger log = LoggerFactory.getLogger(FileProvider.class);
 
     private FileProviderOptions options;
     private String root;

@@ -6,8 +6,7 @@ import express.http.Cookie;
 import express.utils.MediaType;
 import express.utils.Status;
 import express.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,10 +20,8 @@ import java.util.List;
  * @author Simon Reinisch
  * Class for an http-response.
  */
+@Log4j2
 public class Response {
-
-    private static final Logger log = LoggerFactory.getLogger(Response.class);
-
     private final HttpExchange httpExchange;
     private final OutputStream body;
     private final Headers headers;

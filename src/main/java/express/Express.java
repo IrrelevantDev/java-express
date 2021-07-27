@@ -10,8 +10,7 @@ import express.filter.FilterWorker;
 import express.http.HttpRequestHandler;
 import express.http.request.Request;
 import express.http.response.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -26,8 +25,8 @@ import java.util.concurrent.Executors;
  * @author Simon Reinisch
  * Core class of java-express
  */
+@Log4j2
 public class Express implements Router {
-    static final Logger log = LoggerFactory.getLogger(Express.class);
 
     private final ConcurrentHashMap<String, HttpRequestHandler> parameterListener;
     private final ConcurrentHashMap<Object, Object> locals;

@@ -7,6 +7,7 @@ import express.http.HttpRequestHandler;
 import express.http.request.Request;
 import express.http.response.Response;
 import express.utils.Status;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.function.Consumer;
 
@@ -15,6 +16,7 @@ import java.util.function.Consumer;
  * <p>
  * Handler for multiple FilterLayer.
  */
+@Log4j2
 public class FilterLayerHandler {
 
     private final FilterLayer[] layers;
@@ -45,7 +47,7 @@ public class FilterLayerHandler {
         if (response.isClosed()){
             Status status = Status.valueOf(response.getStatus());
             if (status != null){
-                System.out.println("[" + Thread.currentThread().getName() + "] Handled request in " + (System.currentTimeMillis() - start) + "ms with " + status.getCode() + " " + status.getDescription() + " (" + request.getURI().toString() + ")");
+                log.info("[" + Thread.currentThread().getName() + "] Handled request in " + (System.currentTimeMillis() - start) + "ms with " + status.getCode() + " " + status.getDescription() + " (" + request.getURI().toString() + ")");
             }
         }
 
