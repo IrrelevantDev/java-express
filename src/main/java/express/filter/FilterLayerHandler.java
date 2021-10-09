@@ -47,7 +47,7 @@ public class FilterLayerHandler {
         if (response.isClosed()){
             Status status = Status.valueOf(response.getStatus());
             if (status != null){
-                log.info("[" + Thread.currentThread().getName() + "] Handled request in " + (System.currentTimeMillis() - start) + "ms with " + status.getCode() + " " + status.getDescription() + " (" + request.getURI().toString() + ")");
+                log.info("Handled request in " + (System.currentTimeMillis() - start) + "ms with " + status.getCode() + " " + status.getDescription() + " (" + request.getURI().toString() + ")");
             }
         }
 
