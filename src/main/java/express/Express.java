@@ -410,7 +410,7 @@ public class Express implements Router {
                 httpServer.setExecutor(executor);
 
                 // Create handler for all contexts
-                httpServer.createContext("/", exchange -> pool.execute(Express.this,exchange));
+                httpServer.createContext("/", exchange -> pool.execute(Express.this, exchange));
 
                 // Start server
                 httpServer.start();

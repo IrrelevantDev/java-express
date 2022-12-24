@@ -3,6 +3,7 @@ package express.http.response;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import express.http.Cookie;
+import express.http.request.Request;
 import express.utils.MediaType;
 import express.utils.Status;
 import express.utils.Utils;
@@ -28,13 +29,16 @@ public class Response {
 
     private String contentType = MediaType._txt.getMIME();
     private boolean isClose = false;
+    private boolean shouldLog = true;
     private long contentLength = 0;
     private int status = 200;
+    private Request request;
 
-    public Response(HttpExchange exchange) {
+    public Response(HttpExchange exchange, Request request) {
         this.httpExchange = exchange;
         this.headers = exchange.getResponseHeaders();
         this.body = exchange.getResponseBody();
+        this.request = request;
     }
 
     /**
@@ -317,6 +321,18 @@ public class Response {
         return this.isClose;
     }
 
+    public boolean shouldLog() {
+        return shouldLog;
+    }
+
+    public void setShouldLog(boolean shouldLog) {
+        this.shouldLog = shouldLog;
+    }
+
+    public Request getRequest() {
+        return request;
+    }
+
     private void sendHeaders() {
         try {
 
@@ -339,5 +355,24 @@ public class Response {
             log.error("Failed to close output stream.", e);
         }
     }
+    private final Unsafe unsafe = new Unsafe();
 
+    public Unsafe unsafe() {
+        return unsafe;
+    }
+
+    public class Unsafe {
+        public void close() {
+            Response.this.close();
+        }
+        public void sendHeaders() {
+            Response.this.sendHeaders();
+        }
+        public OutputStream body() {
+            return Response.this.body;
+        }
+        public void setClosed(boolean closed) {
+            Response.this.isClose = closed;
+        }
+    }
 }

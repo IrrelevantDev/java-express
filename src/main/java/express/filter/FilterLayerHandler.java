@@ -33,7 +33,7 @@ public class FilterLayerHandler {
     public void handle(HttpExchange httpExchange, Express express) {
         long start = System.currentTimeMillis();
         Request request = new Request(httpExchange, express);
-        Response response = new Response(httpExchange);
+        Response response = new Response(httpExchange, request);
 
         // First fire all middleware's, then the normal request filter
         for (FilterLayer chain : layers) {
@@ -44,13 +44,12 @@ public class FilterLayerHandler {
             }
         }
 
-        if (response.isClosed()){
+        if (response.isClosed() && response.shouldLog()){
             Status status = Status.valueOf(response.getStatus());
             if (status != null){
                 log.info("Handled request in " + (System.currentTimeMillis() - start) + "ms with " + status.getCode() + " " + status.getDescription() + " (" + request.getURI().toString() + ")");
             }
         }
-
     }
 
     /**
