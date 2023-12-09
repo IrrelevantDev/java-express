@@ -33,6 +33,7 @@ public class Response {
     private long contentLength = 0;
     private int status = 200;
     private Request request;
+    private long start = System.currentTimeMillis();
 
     public Response(HttpExchange exchange, Request request) {
         this.httpExchange = exchange;
@@ -150,6 +151,18 @@ public class Response {
         close();
     }
 
+    private boolean logged = false;
+
+    public void logInfo() {
+        if (logged || !shouldLog) {
+            return;
+        }
+        logged = true;
+        Status status = Status.valueOf(getStatus());
+        if (status != null) {
+            log.info("Handled request in " + (System.currentTimeMillis() - start) + "ms with " + status.getCode() + " " + status.getDescription() + " (" + request.getURI().toString() + ")");
+        }
+    }
     /**
      * Send an string as response.
      *
@@ -354,7 +367,9 @@ public class Response {
         } catch (IOException e) {
             log.error("Failed to close output stream.", e);
         }
+        logInfo();
     }
+
     private final Unsafe unsafe = new Unsafe();
 
     public Unsafe unsafe() {

@@ -21,7 +21,9 @@ public class HandlerPool extends ThreadPoolExecutor {
     }
 
     public void execute(Express express, HttpExchange exchange) {
-        super.execute(() -> express.handler.handle(exchange,express));
+        super.execute(() -> {
+            express.handler.handle(exchange,express);
+        });
     }
 
     @Override
