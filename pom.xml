@@ -8,27 +8,6 @@
     <artifactId>java-express</artifactId>
     <version>0.2.1</version>
 
-    <distributionManagement>
-        <repository>
-            <id>central</id>
-            <name>teoncreative-releases</name>
-            <url>http://artifactory.playaspect.net:8081/artifactory/maven-tc</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>teoncreative-snapshots</name>
-            <url>http://artifactory.playaspect.net:8081/artifactory/maven-tc</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>teoncreative-releases</name>
-            <url>http://artifactory.playaspect.net:8081/artifactory/maven-tc</url>
-        </repository>
-    </repositories>
-
     <build>
         <plugins>
             <plugin>
