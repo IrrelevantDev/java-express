@@ -23,6 +23,17 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>teon-releases</id>
+            <url>https://repo.teon.llc/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>teon-snapshots</id>
+            <url>https://repo.teon.llc/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

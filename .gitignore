@@ -11,3 +11,5 @@ build/
 gradle/
 gradlew*
 /gradle.properties
+
+target/
